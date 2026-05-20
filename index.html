@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KNUST CMBA — CWA Planner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f2027 0%,#203a43 45%,#2c5364 100%);
+    min-height:100vh;color:#222;padding:28px 20px 90px;
+  }
+  h1{font-size:19px;font-weight:700;margin-bottom:4px;color:#1a1a2e;}
+  .subtitle{font-size:13px;color:#667;margin-bottom:16px;}
+  .card{
+    background:rgba(255,255,255,0.97);
+    border-radius:16px;padding:24px;
+    box-shadow:0 8px 32px rgba(0,0,0,.18),0 1.5px 4px rgba(0,0,0,.08);
+    margin-bottom:20px;max-width:860px;margin-left:auto;margin-right:auto;
+  }
+  .metric-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .metric{
+    background:linear-gradient(135deg,#eef2ff,#f0f9ff);
+    border-radius:10px;padding:13px 15px;
+    border:1px solid rgba(100,130,255,.15);
+  }
+  .metric-label{font-size:11px;color:#6677aa;margin-bottom:3px;font-weight:500;letter-spacing:.03em;}
+  .metric-val{font-size:23px;font-weight:700;}
+  .spec-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .spec-tab{
+    padding:6px 16px;border-radius:20px;border:1.5px solid #d0d8ee;
+    cursor:pointer;font-size:12px;font-weight:500;
+    background:#fff;color:#556;transition:all .18s;
+  }
+  .spec-tab.active{
+    background:linear-gradient(135deg,#203a43,#2c5364);
+    color:#fff;border-color:transparent;
+    box-shadow:0 2px 8px rgba(32,58,67,.35);
+  }
+  .sect-title{
+    font-size:10.5px;font-weight:700;
+    background:linear-gradient(90deg,#203a43,#2c5364);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    text-transform:uppercase;letter-spacing:.08em;margin:18px 0 7px;
+  }
+  .col-hdr-row{display:grid;grid-template-columns:90px 1fr 36px 160px 44px;gap:8px;padding:2px 0 7px;border-bottom:1.5px solid #eef0f8;}
+  .col-hdr{font-size:11px;color:#aab;font-weight:500;}
+  .course-row{display:grid;grid-template-columns:90px 1fr 36px 160px 44px;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid #f2f4fb;}
+  .course-row:last-child{border-bottom:none;}
+  .code{font-size:11px;color:#99a;font-family:monospace;}
+  .cname{font-size:13px;color:#334;}
+  .credits{text-align:center;font-size:12px;color:#99a;font-weight:500;}
+  .mark-val{font-weight:700;font-size:15px;text-align:right;}
+  input[type=range]{width:100%;accent-color:#2c5364;}
+  .bar-labels{display:flex;justify-content:space-between;font-size:11px;color:#aab;margin-bottom:5px;font-weight:500;}
+  .bar-wrap{position:relative;height:10px;background:#e8ecf5;border-radius:5px;margin-bottom:22px;overflow:visible;}
+  .bar-fill{height:100%;border-radius:5px;transition:width .28s,background .28s;}
+  .bar-marker{position:absolute;top:-6px;width:2.5px;height:22px;background:#334;border-radius:2px;opacity:.5;}
+  .thesis-box{
+    background:linear-gradient(135deg,#f0f4ff,#eaf6f6);
+    border-radius:10px;padding:14px 16px;margin-top:8px;
+    border:1px solid rgba(44,83,100,.12);
+  }
+  .thesis-grid{display:grid;grid-template-columns:90px 1fr 36px 160px 44px;align-items:center;gap:8px;}
+  .thesis-note{font-size:11px;color:#889;margin-top:7px;}
+  .green{color:#1a7a50;} .red{color:#c0392b;} .amber{color:#b7770d;}
+  .watermark{
+    position:fixed;bottom:22px;right:26px;
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.13);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,0.22);
+    border-radius:30px;padding:6px 16px 6px 12px;
+    pointer-events:none;user-select:none;
+    box-shadow:0 2px 16px rgba(0,0,0,.22);
+  }
+  .watermark-dot{
+    width:8px;height:8px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,#56ccf2,#2f80ed);
+    box-shadow:0 0 7px rgba(86,204,242,.8);
+  }
+  .watermark-text{
+    font-size:13px;font-weight:600;letter-spacing:.05em;
+    background:linear-gradient(90deg,#a8edea,#fed6e3);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    font-family:'Inter',sans-serif;
+  }
+  @media(max-width:600px){
+    .metric-cards{grid-template-columns:1fr 1fr;}
+    .course-row,.col-hdr-row,.thesis-grid{grid-template-columns:70px 1fr 28px 110px 36px;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark"><span class="watermark-dot"></span><span class="watermark-text">Caleb Deh</span></div>
+<div class="card">
+  <h1>KNUST CMBA — CWA Planner</h1>
+  <p class="subtitle">Drag each slider to set your target mark per course. CWA updates live. Minimum CWA target: <strong>60</strong></p>
+
+  <div class="spec-tabs" id="specTabs">
+    <button class="spec-tab active" data-spec="marketing">Marketing</button>
+    <button class="spec-tab" data-spec="logistics">Logistics &amp; SC</button>
+    <button class="spec-tab" data-spec="hrm">HR Management</button>
+    <button class="spec-tab" data-spec="finance">Finance</button>
+  </div>
+
+  <div class="metric-cards">
+    <div class="metric">
+      <div class="metric-label">Projected CWA</div>
+      <div class="metric-val" id="cwaDisplay">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Total Grade Points</div>
+      <div class="metric-val" id="gpDisplay">—</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Total Credits</div>
+      <div class="metric-val">57</div>
+    </div>
+  </div>
+
+  <div class="bar-labels"><span>40</span><span>← 60 minimum CWA →</span><span>100</span></div>
+  <div class="bar-wrap">
+    <div class="bar-fill" id="cwaBar"></div>
+    <div class="bar-marker" id="cwaMarker"></div>
+  </div>
+
+  <p class="sect-title">Year 1 — Semester 1</p>
+  <div class="col-hdr-row">
+    <span class="col-hdr">Code</span><span class="col-hdr">Course</span>
+    <span class="col-hdr" style="text-align:center;">Cr.</span>
+    <span class="col-hdr" style="text-align:center;">Target mark</span>
+    <span class="col-hdr" style="text-align:right;">Mark</span>
+  </div>
+  <div id="sem1"></div>
+
+  <p class="sect-title">Year 1 — Semester 2</p>
+  <div id="sem2"></div>
+
+  <p class="sect-title" id="specTitle">Specialization — Marketing (Year 2)</p>
+  <div id="specCourses"></div>
+
+  <p class="sect-title">Thesis (Year 2)</p>
+  <div class="thesis-box">
+    <div class="thesis-grid">
+      <span class="code">CMBA 661</span>
+      <span style="font-size:13px;font-weight:500;">Master Thesis</span>
+      <span class="credits">9</span>
+      <input type="range" min="40" max="100" step="1" value="75" oninput="updateThesis(this.value)">
+      <span class="mark-val" id="thesisMark">75</span>
+    </div>
+    <p class="thesis-note">Highest-weight course — 9 credits. Every mark point here = 9 grade points.</p>
+  </div>
+</div>
+
+<script>
+const CWA_TARGET=60, BAR_MIN=40, BAR_MAX=100, BAR_RANGE=60;
+const TOTAL_CR=57, THESIS_CR=9;
+let curSpec='marketing', thesisT=75;
+
+const data={
+  sem1:[
+    {code:'CMBA 551',name:'Management Information Systems',cr:3,t:72},
+    {code:'CMBA 553',name:'Management in Organizations',cr:3,t:72},
+    {code:'CMBA 555',name:'Managing Human Resources',cr:3,t:72},
+    {code:'CMBA 557',name:'Quantitative Techniques',cr:3,t:72},
+    {code:'CMBA 559',name:'Managerial Economics',cr:3,t:72},
+    {code:'CMBA 561',name:'Accounting and Finance',cr:3,t:72},
+  ],
+  sem2:[
+    {code:'CMBA 552',name:'Operations Management',cr:3,t:71},
+    {code:'CMBA 554',name:'Research Methodology',cr:3,t:71},
+    {code:'CMBA 556',name:'Strategic Management',cr:3,t:71},
+    {code:'CMBA 558',name:'Marketing Management',cr:3,t:71},
+    {code:'CMBA 560',name:'Project Management',cr:3,t:71},
+    {code:'CMBA 562',name:'Business Law & Ethics',cr:3,t:71},
+  ],
+  specs:{
+    marketing:{label:'Specialization — Marketing (Year 2)',courses:[
+      {code:'CMCS 651',name:'Integrated Marketing Communication',cr:3,t:73},
+      {code:'CMCS 653',name:'Consumer Behaviour',cr:3,t:73},
+      {code:'CMCS 655',name:'Services Marketing',cr:3,t:73},
+      {code:'CMCS 657',name:'International Marketing',cr:3,t:73},
+    ]},
+    logistics:{label:'Specialization — Logistics & SC (Year 2)',courses:[
+      {code:'CLSM 651',name:'Procurement Management',cr:3,t:73},
+      {code:'CLSM 653',name:'Logistics and Inventory Management',cr:3,t:73},
+      {code:'CLSM 655',name:'Service Operations Management',cr:3,t:73},
+      {code:'CLSM 557',name:'Supply Chain Management',cr:3,t:73},
+    ]},
+    hrm:{label:'Specialization — HR Management (Year 2)',courses:[
+      {code:'CHRM 651',name:'Performance and Reward Management',cr:3,t:73},
+      {code:'CHRM 653',name:'Strategic Human Resource Management',cr:3,t:73},
+      {code:'CHRM 655',name:'Employee Relations and Labour Law',cr:3,t:73},
+      {code:'CHRM 657',name:'HR Information System',cr:3,t:73},
+    ]},
+    finance:{label:'Specialization — Finance (Year 2)',courses:[
+      {code:'CFIN 651',name:'Risk Management in Financial Institutions',cr:3,t:73},
+      {code:'CFIN 653',name:'Financial Derivatives',cr:3,t:73},
+      {code:'CFIN 655',name:'International Finance',cr:3,t:73},
+      {code:'CFIN 657',name:'Securities and Portfolio Management',cr:3,t:73},
+    ]}
+  }
+};
+
+function mColor(m){return m>=70?'green':m>=60?'amber':'red';}
+
+function renderRows(containerId,list){
+  document.getElementById(containerId).innerHTML=list.map((c,i)=>`
+    <div class="course-row">
+      <span class="code">${c.code}</span>
+      <span class="cname">${c.name}</span>
+      <span class="credits">${c.cr}</span>
+      <input type="range" min="40" max="100" step="1" value="${c.t}" oninput="setMark('${containerId}',${i},this.value)">
+      <span class="mark-val ${mColor(c.t)}" id="mv-${containerId}-${i}">${c.t}</span>
+    </div>`).join('');
+}
+
+function setMark(sec,i,val){
+  val=parseInt(val);
+  if(sec==='sem1') data.sem1[i].t=val;
+  else if(sec==='sem2') data.sem2[i].t=val;
+  else data.specs[curSpec].courses[i].t=val;
+  const el=document.getElementById('mv-'+sec+'-'+i);
+  el.textContent=val; el.className='mark-val '+mColor(val);
+  recalc();
+}
+
+function updateThesis(val){
+  thesisT=parseInt(val);
+  const el=document.getElementById('thesisMark');
+  el.textContent=val; el.className='mark-val '+mColor(thesisT);
+  recalc();
+}
+
+function recalc(){
+  let gp=0;
+  data.sem1.forEach(c=>gp+=c.cr*c.t);
+  data.sem2.forEach(c=>gp+=c.cr*c.t);
+  data.specs[curSpec].courses.forEach(c=>gp+=c.cr*c.t);
+  gp+=THESIS_CR*thesisT;
+  const cwa=gp/TOTAL_CR;
+  const cwaEl=document.getElementById('cwaDisplay');
+  cwaEl.textContent=cwa.toFixed(2);
+  cwaEl.className='metric-val '+(cwa>=CWA_TARGET?'green':'red');
+  document.getElementById('gpDisplay').textContent=gp.toLocaleString();
+  const pct=Math.min(100,Math.max(0,((cwa-BAR_MIN)/BAR_RANGE)*100));
+  const bar=document.getElementById('cwaBar');
+  bar.style.width=pct+'%';
+  bar.style.background=cwa>=CWA_TARGET?'#1a8a5a':'#cc3300';
+  document.getElementById('cwaMarker').style.left=((CWA_TARGET-BAR_MIN)/BAR_RANGE*100)+'%';
+}
+
+function switchSpec(spec){
+  curSpec=spec;
+  document.querySelectorAll('.spec-tab').forEach(t=>t.classList.toggle('active',t.dataset.spec===spec));
+  document.getElementById('specTitle').textContent=data.specs[spec].label;
+  renderRows('specCourses',data.specs[spec].courses);
+  recalc();
+}
+
+document.querySelectorAll('.spec-tab').forEach(t=>t.addEventListener('click',()=>switchSpec(t.dataset.spec)));
+renderRows('sem1',data.sem1);
+renderRows('sem2',data.sem2);
+renderRows('specCourses',data.specs[curSpec].courses);
+recalc();
+</script>
+</body>
+</html>
